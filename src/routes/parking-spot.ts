@@ -94,4 +94,15 @@ export async function parkingSpotRoutes(app: FastifyInstance) {
       .status(200)
       .send("Vaga de estacionamento atualizada com sucesso!");
   });
+
+  app.delete("/:id", async (req, res) => {
+    const getParkingSpotId = z.object({
+      id: z.string().uuid(),
+    });
+
+    const { id } = getParkingSpotId.parse(req.params);
+
+    await knex("parking_spots").where({ id }).delete();
+    return res.status(200).send("Vaga de estacionamento deletada com sucesso!");
+  });
 }
