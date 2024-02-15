@@ -33,4 +33,15 @@ export async function parkingSpotRoutes(app: FastifyInstance) {
     const parkingSpots = await knex("parking_spots").select();
     return res.status(200).send({ parkingSpots });
   });
+
+  app.get("/:id", async (req, res) => {
+    const getParkingSpotId = z.object({
+      id: z.string().uuid(),
+    });
+
+    const { id } = getParkingSpotId.parse(req.params);
+
+    const parkingSpot = await knex("parking_spots").where({ id }).first();
+    return res.status(200).send({ parkingSpot });
+  });
 }
