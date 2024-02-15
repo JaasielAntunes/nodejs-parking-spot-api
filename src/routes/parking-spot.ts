@@ -44,4 +44,29 @@ export async function parkingSpotRoutes(app: FastifyInstance) {
     const parkingSpot = await knex("parking_spots").where({ id }).first();
     return res.status(200).send({ parkingSpot });
   });
+
+  app.put<{ Params: { id: string } }>("/:id", async (req, res) => {
+    const updateParkingSpotParamsSchema = z.object({
+      license: z.string(),
+      brand: z.string(),
+      model: z.string(),
+      color: z.string(),
+    });
+
+    const { id } = req.params;
+
+    const { license, brand, model, color } =
+      updateParkingSpotParamsSchema.parse(req.body);
+
+    await knex("parking_spots").where({ id }).update({
+      license,
+      brand,
+      model,
+      color,
+    });
+
+    return res
+      .status(200)
+      .send("Vaga de estacionamento atualizada com sucesso!");
+  });
 }
