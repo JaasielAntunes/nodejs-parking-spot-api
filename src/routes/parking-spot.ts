@@ -105,4 +105,11 @@ export async function parkingSpotRoutes(app: FastifyInstance) {
     await knex("parking_spots").where({ id }).delete();
     return res.status(200).send("Vaga de estacionamento deletada com sucesso!");
   });
+
+  app.get("/summary", async (req, res) => {
+    const summary = await knex("parking_spots")
+      .count("id", { as: "total" })
+      .first();
+    return res.status(200).send({ summary });
+  });
 }
